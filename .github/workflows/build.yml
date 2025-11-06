@@ -1,0 +1,29 @@
+name: build-chrome-base
+
+# 手动触发构建（点击按钮即可执行）
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ① 拉取代码
+        uses: actions/checkout@v4
+        with:
+          lfs: true  # 关键：启用 LFS 拉取大文件
+
+      - name: ② 登录 Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: demo.goharbor.io  # Harbor 仓库地址
+          username: ${{ secrets.HARBOR_USER }}  # 后续设置的 Harbor 用户名
+          password: ${{ secrets.HARBOR_PWD }}   # 后续设置的 Harbor 密码
+
+      - name: ③ 构建并推送镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .  # 构建上下文为仓库根目录
+          file: ./chrome-base.dockerfile  # 指定 Dockerfile 路径
+          push: true  # 推送镜像到 Harbor
+          tags: demo.goharbor.io/zjy_1/chrome-base:1.0  # 替换为你的 Harbor 项目名
