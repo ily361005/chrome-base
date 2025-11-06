@@ -1,8 +1,36 @@
-- name: 导出镜像为文件
-  run: |
-    docker save demo.goharbor.io/zjy_1/chrome-base:1.0 -o chrome-base-1.0.tar
-- name: 上传镜像包
-  uses: actions/upload-artifact@v4
-  with:
-    name: chrome-base-image
-    path: chrome-base-1.0.tar
+name: build-chrome-base  # 工作流名称（必须有）
+
+on:  # 触发条件（必须有）
+  workflow_dispatch:  # 允许手动触发
+
+jobs:  # 任务定义（必须有）
+  build:  # 任务名称
+    runs-on: ubuntu-latest  # 运行环境
+    steps:  # 步骤列表（所有步骤必须放在这里）
+      - name: ① 拉取代码
+        uses: actions/checkout@v4
+
+      - name: ② 登录 Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: demo.goharbor.io
+          username: ${{ secrets.HARBOR_USER }}
+          password: ${{ secrets.HARBOR_PWD }}
+
+      - name: ③ 构建并推送镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./chrome-base.dockerfile
+          push: true
+          tags: demo.goharbor.io/zjy_1/chrome-base:1.0
+
+      - name: ④ 导出镜像为文件
+        run: |
+          docker save demo.goharbor.io/zjy_1/chrome-base:1.0 -o chrome-base-1.0.tar
+
+      - name: ⑤ 上传镜像包
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-base-image
+          path: chrome-base-1.0.tar
