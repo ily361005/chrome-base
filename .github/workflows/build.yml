@@ -2,7 +2,7 @@
   run: |
     docker save demo.goharbor.io/zjy_1/chrome-base:1.0 -o chrome-base-1.0.tar
 - name: 上传镜像包
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-artifact@v4
   with:
     name: chrome-base-image
     path: chrome-base-1.0.tar
