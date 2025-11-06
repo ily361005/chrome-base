@@ -1,6 +1,6 @@
 # chrome-base.dockerfile
 # 基础镜像：Demo Harbor 里的官方 Python 3.9 slim
-FROM demo.goharbor.io/library/python:3.9-slim
+FROM python:3.9-slim
 
 # 安装 Chrome 依赖（无推荐包，减小体积）
 RUN apt-get update && \
@@ -24,4 +24,5 @@ RUN chmod +x /opt/google/chrome/chrome /usr/local/bin/chromedriver
 ENV PATH="/opt/google/chrome:${PATH}"
 
 # 默认工作目录 & 启动命令（业务镜像可覆盖）
+
 WORKDIR /app
