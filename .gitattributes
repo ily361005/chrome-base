@@ -1,0 +1,2 @@
+deps/chrome filter=lfs diff=lfs merge=lfs -text
+deps/chromedriver filter=lfs diff=lfs merge=lfs -text
